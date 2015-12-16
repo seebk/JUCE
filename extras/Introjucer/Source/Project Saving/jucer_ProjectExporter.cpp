@@ -31,6 +31,7 @@
 #include "jucer_ProjectExport_Android.h"
 #include "jucer_ProjectExport_AndroidStudio.h"
 #include "jucer_ProjectExport_CodeBlocks.h"
+#include "jucer_ProjectExport_QtCreator.h"
 
 //==============================================================================
 static void addType (Array<ProjectExporter::ExporterTypeInfo>& list,
@@ -57,6 +58,7 @@ Array<ProjectExporter::ExporterTypeInfo> ProjectExporter::getExporterTypes()
     addType (types, AndroidAntProjectExporter::getName(),        BinaryData::projectIconAndroid_png,        BinaryData::projectIconAndroid_pngSize);
     addType (types, CodeBlocksProjectExporter::getNameWindows(), BinaryData::projectIconCodeblocks_png,     BinaryData::projectIconCodeblocks_pngSize);
     addType (types, CodeBlocksProjectExporter::getNameLinux(),   BinaryData::projectIconCodeblocks_png,     BinaryData::projectIconCodeblocks_pngSize);
+    addType (types, QtCreatorProjectExporter::getNameQtCreator(),BinaryData::projectIconLinuxMakefile_png,  BinaryData::projectIconLinuxMakefile_pngSize);
 
     return types;
 }
@@ -80,6 +82,7 @@ ProjectExporter* ProjectExporter::createNewExporter (Project& project, const int
         case 10:    exp = new AndroidAntProjectExporter    (project, ValueTree (AndroidAntProjectExporter    ::getValueTreeTypeName())); break;
         case 11:    exp = new CodeBlocksProjectExporter    (project, ValueTree (CodeBlocksProjectExporter    ::getValueTreeTypeName (CodeBlocksProjectExporter::windowsTarget)), CodeBlocksProjectExporter::windowsTarget); break;
         case 12:    exp = new CodeBlocksProjectExporter    (project, ValueTree (CodeBlocksProjectExporter    ::getValueTreeTypeName (CodeBlocksProjectExporter::linuxTarget)),   CodeBlocksProjectExporter::linuxTarget); break;
+        case 13:    exp = new QtCreatorProjectExporter  (project, ValueTree (QtCreatorProjectExporter ::getValueTreeTypeName())); break;
         default:    jassertfalse; return 0;
     }
 
@@ -131,6 +134,7 @@ ProjectExporter* ProjectExporter::createExporter (Project& project, const ValueT
     if (exp == nullptr)    exp = AndroidStudioProjectExporter ::createForSettings (project, settings);
     if (exp == nullptr)    exp = AndroidAntProjectExporter    ::createForSettings (project, settings);
     if (exp == nullptr)    exp = CodeBlocksProjectExporter    ::createForSettings (project, settings);
+    if (exp == nullptr)    exp = QtCreatorProjectExporter     ::createForSettings (project, settings);
 
     jassert (exp != nullptr);
     return exp;
@@ -412,7 +416,8 @@ static bool areCompatibleExporters (const ProjectExporter& p1, const ProjectExpo
         || (p1.isLinuxMakefile() && p2.isLinuxMakefile())
         || (p1.isAndroid() && p2.isAndroid())
         || (p1.isCodeBlocksWindows() && p2.isCodeBlocksWindows())
-        || (p1.isCodeBlocksLinux() && p2.isCodeBlocksLinux());
+        || (p1.isCodeBlocksLinux() && p2.isCodeBlocksLinux())
+        || (p1.isQtCreator() && p2.isQtCreator());
 }
 
 void ProjectExporter::createDefaultModulePaths()

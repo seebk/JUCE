@@ -393,6 +393,25 @@ void LibraryModule::prepareExporter (ProjectExporter& exporter, ProjectSaver& pr
         parseAndAddLibs (exporter.mingwLibs, moduleInfo.moduleInfo ["mingwLibs"].toString());
     }
 
+    if (exporter.isQtCreator())
+    {
+        if (isAUPluginHost (project))
+            exporter.xcodeFrameworks.addTokens ("AudioUnit CoreAudioKit", false);
+
+        const String frameworks (moduleInfo.moduleInfo [exporter.isOSX() ? "OSXFrameworks" : "iOSFrameworks"].toString());
+        exporter.xcodeFrameworks.addTokens (frameworks, ", ", String::empty);
+
+        exporter.mingwLibs.addTokens (moduleInfo.moduleInfo ["mingwLibs"].toString(), ", ", String::empty);
+        exporter.mingwLibs.trim();
+        exporter.mingwLibs.sort (false);
+        exporter.mingwLibs.removeDuplicates (false);
+
+        exporter.linuxLibs.addTokens (moduleInfo.moduleInfo ["LinuxLibs"].toString(), ", ", String::empty);
+        exporter.linuxLibs.trim();
+        exporter.linuxLibs.sort (false);
+        exporter.linuxLibs.removeDuplicates (false);
+    }
+
     if (moduleInfo.isPluginClient())
     {
         if (shouldBuildVST  (project).getValue())  VSTHelpers::prepareExporter (exporter, projectSaver, false);
@@ -516,6 +535,7 @@ static bool fileTargetMatches (ProjectExporter& exporter, const String& target)
     if (exporter.isLinux())                 return exporterTargetMatches ("linux",   target);
     if (exporter.isAndroid())               return exporterTargetMatches ("android", target);
     if (exporter.isCodeBlocksWindows())     return exporterTargetMatches ("mingw",   target);
+    if (exporter.isQtCreator())             return exporterTargetMatches ("qtcreator", target);
 
     return target.isEmpty();
 }
