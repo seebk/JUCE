@@ -27,12 +27,12 @@ CONFIG(debug, debug|release){
         ../../JuceLibraryCode \
         ../../../../modules \
 
-    DEFINES += \
-        "DEBUG=1" \
-        "_DEBUG=1" \
-        "JUCER_QT_CREATOR_D5F46ABF=1" \
-        "JUCE_APP_VERSION=3.2.0" \
-        "JUCE_APP_VERSION_HEX=0x30200" \
+    DEFINES += \ 
+        "DEBUG=1" \ 
+        "_DEBUG=1" \ 
+        "JUCER_QT_CREATOR_D5F46ABF=1" \ 
+        "JUCE_APP_VERSION=4.1.0" \ 
+        "JUCE_APP_VERSION_HEX=0x40100" \ 
 
 }
 
@@ -42,11 +42,11 @@ CONFIG(release, debug|release){
         ../../JuceLibraryCode \
         ../../../../modules \
 
-    DEFINES += \
-        "NDEBUG=1" \
-        "JUCER_QT_CREATOR_D5F46ABF=1" \
-        "JUCE_APP_VERSION=3.2.0" \
-        "JUCE_APP_VERSION_HEX=0x30200" \
+    DEFINES += \ 
+        "NDEBUG=1" \ 
+        "JUCER_QT_CREATOR_D5F46ABF=1" \ 
+        "JUCE_APP_VERSION=4.1.0" \ 
+        "JUCE_APP_VERSION_HEX=0x40100" \ 
 
 }
 
@@ -70,6 +70,7 @@ SOURCES = \
 	"../../Source/Application/jucer_AutoUpdater.cpp" \
 	"../../Source/Application/jucer_CommandLine.cpp" \
 	"../../Source/Application/jucer_DocumentEditorComponent.cpp" \
+	"../../Source/Application/jucer_GlobalPreferences.cpp" \
 	"../../Source/Application/jucer_Main.cpp" \
 	"../../Source/Application/jucer_MainWindow.cpp" \
 	"../../Source/Application/jucer_OpenDocumentManager.cpp" \
@@ -96,6 +97,7 @@ SOURCES = \
 	"../../Source/ComponentEditor/jucer_PaintRoutine.cpp" \
 	"../../Source/Project Saving/jucer_ProjectExporter.cpp" \
 	"../../Source/Project Saving/jucer_ResourceFile.cpp" \
+	"../../Source/Project/jucer_DependencyPathPropertyComponent.cpp" \
 	"../../Source/Project/jucer_Module.cpp" \
 	"../../Source/Project/jucer_Project.cpp" \
 	"../../Source/Project/jucer_ProjectContentComponent.cpp" \
@@ -128,6 +130,7 @@ HEADERS = \
 	"../../Source/Application/jucer_CommonHeaders.h" \
 	"../../Source/Application/jucer_DocumentEditorComponent.h" \
 	"../../Source/Application/jucer_FilePreviewComponent.h" \
+	"../../Source/Application/jucer_GlobalPreferences.h" \
 	"../../Source/jucer_Headers.h" \
 	"../../Source/Application/jucer_MainWindow.h" \
 	"../../Source/Application/jucer_OpenDocumentManager.h" \
@@ -196,8 +199,8 @@ HEADERS = \
 	"../../Source/ComponentEditor/jucer_ObjectTypes.h" \
 	"../../Source/ComponentEditor/jucer_PaintRoutine.h" \
 	"../../Source/ComponentEditor/jucer_UtilityFunctions.h" \
-	"../../Source/Project Saving/jucer_ProjectExport_QtCreator.h" \
 	"../../Source/Project Saving/jucer_ProjectExport_Android.h" \
+	"../../Source/Project Saving/jucer_ProjectExport_AndroidStudio.h" \
 	"../../Source/Project Saving/jucer_ProjectExport_CodeBlocks.h" \
 	"../../Source/Project Saving/jucer_ProjectExport_Make.h" \
 	"../../Source/Project Saving/jucer_ProjectExport_MSVC.h" \
@@ -209,6 +212,7 @@ HEADERS = \
 	"../../Source/Project/jucer_ConfigTree_Base.h" \
 	"../../Source/Project/jucer_ConfigTree_Exporter.h" \
 	"../../Source/Project/jucer_ConfigTree_Modules.h" \
+	"../../Source/Project/jucer_DependencyPathPropertyComponent.h" \
 	"../../Source/Project/jucer_GroupInformationComponent.h" \
 	"../../Source/Project/jucer_Module.h" \
 	"../../Source/Project/jucer_ModulesPanel.h" \
@@ -254,6 +258,7 @@ HEADERS = \
 	"../../Source/BinaryData/jucer_NewComponentTemplate.h" \
 	"../../Source/BinaryData/jucer_NewCppFileTemplate.h" \
 	"../../Source/BinaryData/jucer_NewInlineComponentTemplate.h" \
+	"../../../../modules/juce_core/text/juce_Base64.h" \
 	"../../../../modules/juce_core/text/juce_CharacterFunctions.h" \
 	"../../../../modules/juce_core/text/juce_CharPointer_ASCII.h" \
 	"../../../../modules/juce_core/text/juce_CharPointer_UTF8.h" \
@@ -294,6 +299,7 @@ HEADERS = \
 	"../../../../modules/juce_core/containers/juce_ElementComparator.h" \
 	"../../../../modules/juce_core/containers/juce_HashMap.h" \
 	"../../../../modules/juce_core/containers/juce_LinkedListPointer.h" \
+	"../../../../modules/juce_core/containers/juce_ListenerList.h" \
 	"../../../../modules/juce_core/containers/juce_NamedValueSet.h" \
 	"../../../../modules/juce_core/containers/juce_OwnedArray.h" \
 	"../../../../modules/juce_core/containers/juce_PropertySet.h" \
@@ -363,6 +369,7 @@ HEADERS = \
 	"../../../../modules/juce_core/misc/juce_WindowsRegistry.h" \
 	"../../../../modules/juce_core/native/juce_android_JNIHelpers.h" \
 	"../../../../modules/juce_core/native/juce_BasicNativeHeaders.h" \
+	"../../../../modules/juce_core/native/juce_mac_ClangBugWorkaround.h" \
 	"../../../../modules/juce_core/native/juce_osx_ObjCHelpers.h" \
 	"../../../../modules/juce_core/native/juce_posix_SharedCode.h" \
 	"../../../../modules/juce_core/native/juce_win32_ComSmartPtr.h" \
@@ -398,7 +405,6 @@ HEADERS = \
 	"../../../../modules/juce_events/broadcasters/juce_AsyncUpdater.h" \
 	"../../../../modules/juce_events/broadcasters/juce_ChangeBroadcaster.h" \
 	"../../../../modules/juce_events/broadcasters/juce_ChangeListener.h" \
-	"../../../../modules/juce_events/broadcasters/juce_ListenerList.h" \
 	"../../../../modules/juce_events/interprocess/juce_ConnectedChildProcess.h" \
 	"../../../../modules/juce_events/interprocess/juce_InterprocessConnection.h" \
 	"../../../../modules/juce_events/interprocess/juce_InterprocessConnectionServer.h" \
