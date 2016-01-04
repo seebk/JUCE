@@ -12,11 +12,14 @@ Instructions:
 
 Known problems:
 
-* Windows has a maximum length of 260 characters for relative paths. JUCE projects make heavy use of relative paths and these may become too long and compilation will fail. You can try to map long base paths to an own drive letter. From a command line run
+* Windows has a maximum length of 260 characters for relative paths. JUCE projects make heavy use of relative paths and these may become too long and compilation will fail.  A simple solution is to set copy-mode for all modules to `copy locally` in the Introjucer. 
+
+  Additionally, you can try to map long base paths to an own drive letter. From a command line run
 
     subst P:\ C:\Your\Project\Folder\Is\Quite\Long
 
-and open your project files in QtCreator directly from the new drive P:\YourProject\Builds\Qtcreator\...
+  and open your project files in QtCreator directly from the new drive P:\YourProject\Builds\Qtcreator\...
+
 
 
 # The JUCE Library
