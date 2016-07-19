@@ -38,4 +38,5 @@ in other GPL applications. One module (the juce_core module)
 is permissively licensed under the ISC.
 
 For more information, visit the website:
+
 http://www.juce.com
