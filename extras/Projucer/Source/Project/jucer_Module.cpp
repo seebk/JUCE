@@ -326,17 +326,17 @@ void LibraryModule::addSettingsForModuleToExporter (ProjectExporter& exporter, P
 
         parseAndAddLibs (xcodeExporter.xcodeLibs, moduleInfo.moduleInfo [exporter.isOSX() ? "OSXLibs" : "iOSLibs"].toString());
     }
+    else if (exporter.isQtCreator())
+    {
+        parseAndAddLibs (exporter.linuxLibs, moduleInfo.moduleInfo ["linuxLibs"].toString());
+        parseAndAddLibs (exporter.mingwLibs, moduleInfo.moduleInfo ["mingwLibs"].toString());
+    }
     else if (exporter.isLinux())
     {
         parseAndAddLibs (exporter.linuxLibs, moduleInfo.moduleInfo ["linuxLibs"].toString());
     }
     else if (exporter.isCodeBlocks() && exporter.isWindows())
     {
-        parseAndAddLibs (exporter.mingwLibs, moduleInfo.moduleInfo ["mingwLibs"].toString());
-    }
-    else if (exporter.isQtCreator())
-    {
-        parseAndAddLibs (exporter.linuxLibs, moduleInfo.moduleInfo ["linuxLibs"].toString());
         parseAndAddLibs (exporter.mingwLibs, moduleInfo.moduleInfo ["mingwLibs"].toString());
     }
 }

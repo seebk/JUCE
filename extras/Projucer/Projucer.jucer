@@ -84,6 +84,23 @@
         <MODULEPATH id="juce_core" path="../../modules"/>
       </MODULEPATHS>
     </LINUX_MAKE>
+    <QT_CREATOR targetFolder="Builds/QtCreator" extraCompilerFlags="-std=c++11">
+      <CONFIGURATIONS>
+        <CONFIGURATION name="Debug" libraryPath="/usr/X11R6/lib/" isDebug="1" optimisation="1"
+                       targetName="Projucer"/>
+        <CONFIGURATION name="Release" libraryPath="/usr/X11R6/lib/" isDebug="0" optimisation="3"
+                       targetName="Projucer"/>
+      </CONFIGURATIONS>
+      <MODULEPATHS>
+        <MODULEPATH id="juce_gui_extra" path="../../modules"/>
+        <MODULEPATH id="juce_gui_basics" path="../../modules"/>
+        <MODULEPATH id="juce_graphics" path="../../modules"/>
+        <MODULEPATH id="juce_events" path="../../modules"/>
+        <MODULEPATH id="juce_data_structures" path="../../modules"/>
+        <MODULEPATH id="juce_cryptography" path="../../modules"/>
+        <MODULEPATH id="juce_core" path="../../modules"/>
+      </MODULEPATHS>
+    </QT_CREATOR>
   </EXPORTFORMATS>
   <MAINGROUP name="Projucer" id="NhrJq66R">
     <GROUP id="vD0TyHx" name="Application">
