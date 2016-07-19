@@ -27,3 +27,7 @@
 #endif
 
 #include "Standalone/juce_StandaloneFilterApp.cpp"
+
+#if ! JUCE_USE_CUSTOM_AU3_STANDALONE_APP
+ START_JUCE_APPLICATION (StandaloneFilterApp);
+#endif

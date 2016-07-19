@@ -27,9 +27,9 @@
 
 
 class LoginForm  : public Component,
-                   public ButtonListener,
+                   private ButtonListener,
                    private TextEditor::Listener,
-                   private ProjucerLicences::LoginCallback
+                   private ProjucerLicenses::LoginCallback
 {
 public:
     LoginForm()
@@ -55,7 +55,9 @@ public:
         addAndMakeVisible (passwordEditor);
         initialiseTextField (userIDEditor, userIDLabel);
         addAndMakeVisible (userIDEditor);
-        userIDEditor.setText (ProjucerLicences::getInstance()->getLoginName());
+
+        String userName = ProjucerLicenses::getInstance()->getLoginName();
+        userIDEditor.setText (userName.isEmpty() ? getLastUserName() : userName);
 
         initialiseLabel (errorLabel, Font::plain, ProjucerDialogLookAndFeel::getErrorTextColour());
         addChildComponent (errorLabel);
@@ -69,7 +71,7 @@ public:
         rememberLoginCheckbox.addListener (this);
 
         forgotPasswordButton.setColour (HyperlinkButton::textColourId, Colours::white);
-        forgotPasswordButton.setFont (lookAndFeel.getContaxProFont().withHeight (lookAndFeel.labelFontSize), false, Justification::topLeft);
+        forgotPasswordButton.setFont (ProjucerDialogLookAndFeel::getDialogFont().withHeight (lookAndFeel.labelFontSize), false, Justification::topLeft);
         addAndMakeVisible (forgotPasswordButton);
 
         initialiseButton (loginButton, KeyPress::returnKey);
@@ -166,7 +168,7 @@ private:
     {
         textField.setColour (TextEditor::focusedOutlineColourId, Colours::transparentWhite);
         textField.setColour (TextEditor::highlightColourId, ProjucerDialogLookAndFeel::getErrorTextColour());
-        textField.setFont (lookAndFeel.getContaxProFont().withHeight (17));
+        textField.setFont (ProjucerDialogLookAndFeel::getDialogFont().withHeight (17));
         textField.addListener (this);
         associatedLabel.setColour (Label::textColourId, Colours::white);
         addAndMakeVisible (associatedLabel);
@@ -205,6 +207,8 @@ private:
     void loginButtonClicked()
     {
         loginName = userIDEditor.getText();
+        getGlobalProperties().setValue ("lastUserName", loginName);
+
         password = passwordEditor.getText();
 
         if (! isValidEmail (loginName) || password.isEmpty())
@@ -219,7 +223,7 @@ private:
         errorLabel.setVisible (false);
         spinner.setVisible (true);
 
-        ProjucerLicences::getInstance()->login (loginName, password, rememberLogin, this);
+        ProjucerLicenses::getInstance()->login (loginName, password, rememberLogin, this);
     }
 
     void registerButtonClicked()
@@ -235,6 +239,11 @@ private:
     void rememberLoginCheckboxClicked()
     {
         rememberLogin = rememberLoginCheckbox.getToggleState();
+    }
+
+    String getLastUserName() const
+    {
+        return getGlobalProperties().getValue ("lastUserName");
     }
 
     void handleInvalidLogin()
@@ -265,7 +274,7 @@ private:
         cancelButton.setEnabled (true);
         registerButton.setEnabled (true);
 
-        ProjucerApplication::getApp().updateBuildEnabledSetting();
+        ProjucerApplication::getApp().updateAllBuildTabs();
     }
 
     void loginSuccess (const String& username, const String& apiKey) override
@@ -276,7 +285,7 @@ private:
         if (DialogWindow* parentDialog = findParentComponentOfClass<DialogWindow>())
         {
             parentDialog->exitModalState (0);
-            ProjucerApplication::getApp().updateBuildEnabledSetting();
+            ProjucerApplication::getApp().updateAllBuildTabs();
         }
     }
 

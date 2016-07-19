@@ -102,7 +102,9 @@ void ProjucerApplication::initialise (const String& commandLine)
             return;
         }
 
-        if (! initialiseLog())
+        openDocumentManager.registerType (new ProjucerAppClasses::LiveBuildCodeEditorDocument::Type(), 2);
+
+        if (! checkEULA())
         {
             quit();
             return;
@@ -115,15 +117,8 @@ void ProjucerApplication::initialise (const String& commandLine)
 
         settings->appearance.refreshPresetSchemeList();
 
-        initialiseWindows (commandLine);
-
-       #if JUCE_MAC
-        MenuBarModel::setMacMainMenu (menuModel, nullptr, "Open Recent");
-       #endif
-
-        versionChecker = new LatestVersionChecker();
-
-        showLoginFormAsyncIfNotTriedRecently();
+        // do further initialisation in a moment when the message loop has started
+        triggerAsyncUpdate();
     }
 }
 
@@ -133,23 +128,6 @@ void ProjucerApplication::initialiseBasics()
     settings = new StoredSettings();
     ImageCache::setCacheTimeout (30 * 1000);
     icons = new Icons();
-}
-
-bool ProjucerApplication::initialiseLog()
-{
-    openDocumentManager.registerType (new ProjucerAppClasses::LiveBuildCodeEditorDocument::Type(), 2);
-
-    if (currentEULAHasBeenAcceptedPreviously())
-        return true;
-
-    ScopedPointer<AlertWindow> eulaDialogue (new EULADialogue());
-    bool hasBeenAccepted = (eulaDialogue->runModalLoop() == EULADialogue::accepted);
-    setCurrentEULAAccepted (hasBeenAccepted);
-
-    if (hasBeenAccepted)
-        return initialiseLogger ("log_");
-
-    return false;
 }
 
 bool ProjucerApplication::initialiseLogger (const char* filePrefix)
@@ -171,9 +149,22 @@ bool ProjucerApplication::initialiseLogger (const char* filePrefix)
     return logger != nullptr;
 }
 
+void ProjucerApplication::handleAsyncUpdate()
+{
+    initialiseWindows (getCommandLineParameters());
+
+   #if JUCE_MAC
+    MenuBarModel::setMacMainMenu (menuModel, nullptr, "Open Recent");
+   #endif
+
+    versionChecker = new LatestVersionChecker();
+
+    showLoginFormAsyncIfNotTriedRecently();
+}
+
 void ProjucerApplication::initialiseWindows (const String& commandLine)
 {
-    const String commandLineWithoutNSDebug (commandLine.replace ("-NSDocumentRevisionsDebugMode YES", ""));
+    const String commandLineWithoutNSDebug (commandLine.replace ("-NSDocumentRevisionsDebugMode YES", StringRef()));
 
     if (commandLineWithoutNSDebug.trim().isNotEmpty() && ! commandLineWithoutNSDebug.trim().startsWithChar ('-'))
         anotherInstanceStarted (commandLine);
@@ -520,11 +511,11 @@ void ProjucerApplication::getCommandInfo (CommandID commandID, ApplicationComman
         break;
 
     case CommandIDs::loginLogout:
-        result.setInfo (ProjucerLicences::getInstance()->isLoggedIn()
-                           ? String ("Sign out ") + ProjucerLicences::getInstance()->getLoginName()
+        result.setInfo (ProjucerLicenses::getInstance()->isLoggedIn()
+                           ? String ("Sign out ") + ProjucerLicenses::getInstance()->getLoginName()
                            : String ("Sign in..."),
                         "Log out of your JUCE account", CommandCategories::general, 0);
-        result.setActive (ProjucerLicences::getInstance()->isDLLPresent());
+        result.setActive (ProjucerLicenses::getInstance()->isDLLPresent());
         break;
 
     default:
@@ -720,7 +711,7 @@ void ProjucerApplication::hideLoginForm()
 
 void ProjucerApplication::showLoginForm()
 {
-    if (ProjucerLicences::getInstance()->isDLLPresent())
+    if (ProjucerLicenses::getInstance()->isDLLPresent())
     {
         jassert (MessageManager::getInstance()->isThisTheMessageThread());
 
@@ -748,7 +739,7 @@ void ProjucerApplication::showLoginForm()
 
 void ProjucerApplication::showLoginFormAsyncIfNotTriedRecently()
 {
-    if (ProjucerLicences::getInstance()->isDLLPresent())
+    if (ProjucerLicenses::getInstance()->isDLLPresent())
     {
         Time lastLoginAttempt (getGlobalProperties().getValue ("lastLoginAttemptTime").getIntValue() * (int64) 1000);
 
@@ -765,28 +756,40 @@ void ProjucerApplication::timerCallback()
 {
     stopTimer();
 
-    if (! ProjucerLicences::getInstance()->isLoggedIn())
+    if (! ProjucerLicenses::getInstance()->isLoggedIn())
         showLoginForm();
 }
 
-void ProjucerApplication::updateBuildEnabledSetting()
+void ProjucerApplication::updateAllBuildTabs()
 {
     for (int i = 0; i < mainWindowList.windows.size(); ++i)
         if (ProjectContentComponent* p = mainWindowList.windows.getUnchecked(i)->getProjectContentComponent())
-            p->refreshTabsIfBuildStatusChanged();
+            p->rebuildProjectTabs();
 }
 
 //==============================================================================
 void ProjucerApplication::loginOrLogout()
 {
-    ProjucerLicences& status = *ProjucerLicences::getInstance();
+    ProjucerLicenses& status = *ProjucerLicenses::getInstance();
 
     if (status.isLoggedIn())
         status.logout();
     else
         showLoginForm();
 
-    updateBuildEnabledSetting();
+    updateAllBuildTabs();
+}
+
+bool ProjucerApplication::checkEULA()
+{
+    if (currentEULAHasBeenAcceptedPreviously()
+          || ! ProjucerLicenses::getInstance()->isDLLPresent())
+        return true;
+
+    ScopedPointer<AlertWindow> eulaDialogue (new EULADialogue());
+    bool hasBeenAccepted = (eulaDialogue->runModalLoop() == EULADialogue::accepted);
+    setCurrentEULAAccepted (hasBeenAccepted);
+    return hasBeenAccepted;
 }
 
 bool ProjucerApplication::currentEULAHasBeenAcceptedPreviously() const

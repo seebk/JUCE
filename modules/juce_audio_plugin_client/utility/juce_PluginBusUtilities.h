@@ -45,7 +45,7 @@ struct PluginBusUtilities
     AudioBusArray&       getFilterBus (bool inputBus) noexcept         { return inputBus ? processor.busArrangement.inputBuses : processor.busArrangement.outputBuses; }
     const AudioBusArray& getFilterBus (bool inputBus) const noexcept   { return inputBus ? processor.busArrangement.inputBuses : processor.busArrangement.outputBuses; }
     int getBusCount (bool inputBus) const noexcept                     { return getFilterBus (inputBus).size(); }
-    AudioChannelSet getChannelSet (bool inputBus, int bus) noexcept    { return getFilterBus (inputBus).getReference (bus).channels; }
+    AudioChannelSet getChannelSet (bool inp, int bus) noexcept         { return isPositiveAndBelow (bus, getBusCount (inp)) ? getFilterBus (inp).getReference (bus).channels : AudioChannelSet(); }
     int getNumChannels (bool inp, int bus) const noexcept              { return isPositiveAndBelow (bus, getBusCount (inp)) ? getFilterBus (inp).getReference (bus).channels.size() : 0; }
     bool isBusEnabled (bool inputBus, int bus) const noexcept          { return (getNumChannels (inputBus, bus) > 0); }
     bool hasInputs  (int bus) const noexcept                           { return isBusEnabled (true,  bus); }
@@ -341,7 +341,7 @@ private:
         AudioChannelSet set;
 
         // If the plug-in does not complain about setting it's layout to an undefined layout
-        // then we assume that the plug-in ignores the layout alltogether
+        // then we assume that the plug-in ignores the layout altogether
         for (int i = 0; i < channelNum; ++i)
             set.addChannel (static_cast<AudioChannelSet::ChannelType> (pseudoChannelBitNum + i));
 

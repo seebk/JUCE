@@ -90,6 +90,12 @@ namespace Ids
     DECLARE_ID (codeSigningIdentity);
     DECLARE_ID (fastMath);
     DECLARE_ID (linkTimeOptimisation);
+    DECLARE_ID (stripLocalSymbols);
+    DECLARE_ID (xcodeVstBinaryLocation);
+    DECLARE_ID (xcodeVst3BinaryLocation);
+    DECLARE_ID (xcodeAudioUnitBinaryLocation);
+    DECLARE_ID (xcodeRtasBinaryLocation);
+    DECLARE_ID (xcodeAaxBinaryLocation);
     DECLARE_ID (osxSDK);
     DECLARE_ID (osxCompatibility);
     DECLARE_ID (osxArchitecture);
@@ -111,6 +117,7 @@ namespace Ids
     DECLARE_ID (generateManifest);
     DECLARE_ID (useRuntimeLibDLL);
     DECLARE_ID (wholeProgramOptimisation);
+    DECLARE_ID (enableIncrementalLinking);
     DECLARE_ID (buildVST);
     DECLARE_ID (bundleIdentifier);
     DECLARE_ID (aaxIdentifier);
@@ -159,7 +166,6 @@ namespace Ids
     DECLARE_ID (androidTheme);
     DECLARE_ID (androidStaticLibraries);
     DECLARE_ID (androidSharedLibraries);
-    DECLARE_ID (androidNdkPlatformVersion);
     DECLARE_ID (androidScreenOrientation);
     DECLARE_ID (iosScreenOrientation);
     DECLARE_ID (iosInAppPurchases);
