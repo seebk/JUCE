@@ -355,6 +355,7 @@ void LibraryModule::addSettingsForModuleToExporter (ProjectExporter& exporter, P
     else if (exporter.isQtCreator())
     {
         parseAndAddLibs (exporter.linuxLibs, moduleInfo.moduleInfo ["linuxLibs"].toString());
+        parseAndAddLibs (exporter.linuxPackages, moduleInfo.moduleInfo ["linuxPackages"].toString());
         parseAndAddLibs (exporter.mingwLibs, moduleInfo.moduleInfo ["mingwLibs"].toString());
     }
     else if (exporter.isLinux())

@@ -235,6 +235,15 @@ private:
         // Linux specific options
         defines.clear();
         out << "unix:  QMAKE_CXXFLAGS += -I/usr/include/freetype2 -I/usr/include";
+        if (linuxPackages.size() > 0)
+        {
+            out << " `pkg-config --cflags";
+            for (int i = 0; i < linuxPackages.size(); ++i)
+                out << " " << linuxPackages[i];
+            out << "`";
+        }
+        if (linuxLibs.contains("pthread"))
+            out << " -pthread";
         if (makefileIsDLL)
             out << " -fPIC";
         defines.set ("LINUX", "1");
@@ -317,7 +326,14 @@ private:
          out << newLine;
 
         // Linux specific linker flags
-        out << "unix:  LIBS += -L/usr/X11R6/lib/ -lcurl";
+        out << "unix:  LIBS += -L/usr/X11R6/lib/";
+        if (linuxPackages.size() > 0)
+        {
+            out << " `pkg-config --libs";
+            for (int i = 0; i < linuxPackages.size(); ++i)
+                out << " " << linuxPackages[i];
+            out << "`";
+        }
         for (int i = 0; i < linuxLibs.size(); ++i)
             out << " -l" << linuxLibs[i];
         out << newLine;

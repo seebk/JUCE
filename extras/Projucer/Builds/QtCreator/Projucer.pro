@@ -18,7 +18,7 @@ CONFIG(debug, debug|release){
 
 # Compiler flags
 QMAKE_CXXFLAGS = -std=c++11 -Wall
-unix:  QMAKE_CXXFLAGS += -I/usr/include/freetype2 -I/usr/include -D "LINUX=1"
+unix:  QMAKE_CXXFLAGS += -I/usr/include/freetype2 -I/usr/include `pkg-config --cflags freetype2 libcurl x11 xext xinerama` -pthread -DLINUX=1
 win32: QMAKE_CXXFLAGS += -mstackrealign -D__MINGW__=1 -D__MINGW_EXTENSION=
 
 QMAKE_CXXFLAGS_DEBUG   = -g -ggdb  -O0 -std=c++11
@@ -31,8 +31,8 @@ CONFIG(debug, debug|release){
         "DEBUG=1" \ 
         "_DEBUG=1" \ 
         "JUCER_QT_CREATOR_D5F46ABF=1" \ 
-        "JUCE_APP_VERSION=4.2.0" \ 
-        "JUCE_APP_VERSION_HEX=0x40200" \ 
+        "JUCE_APP_VERSION=4.3.0" \ 
+        "JUCE_APP_VERSION_HEX=0x40300" \ 
 
 }
 
@@ -45,8 +45,8 @@ CONFIG(release, debug|release){
     DEFINES += \ 
         "NDEBUG=1" \ 
         "JUCER_QT_CREATOR_D5F46ABF=1" \ 
-        "JUCE_APP_VERSION=4.2.0" \ 
-        "JUCE_APP_VERSION_HEX=0x40200" \ 
+        "JUCE_APP_VERSION=4.3.0" \ 
+        "JUCE_APP_VERSION_HEX=0x40300" \ 
 
 }
 
@@ -58,7 +58,7 @@ QMAKE_CFLAGS_DEBUG   = $$QMAKE_CXXFLAGS_DEBUG
 
 # Linker flags
 LIBS = -L$$DESTDIR 
-unix:  LIBS += -L/usr/X11R6/lib/ -lcurl -lX11 -lXext -lXinerama -ldl -lfreetype -lpthread -lrt
+unix:  LIBS += -L/usr/X11R6/lib/ `pkg-config --libs freetype2 libcurl x11 xext xinerama` -ldl -lpthread -lrt
 win32: LIBS += -lgdi32 -luser32 -lkernel32 -lcomctl32 -lcomdlg32 -limm32 -lole32 -loleaut32 -lrpcrt4 -lshlwapi -luuid -lversion -lwininet -lwinmm -lws2_32 -lwsock32 -static -lpthread
 win32: QMAKE_LFLAGS += -static-libstdc++ -static-libgcc
 QMAKE_LFLAGS += 
@@ -70,6 +70,7 @@ SOURCES = \
 	"../../Source/Application/jucer_AutoUpdater.cpp" \
 	"../../Source/Application/jucer_CommandLine.cpp" \
 	"../../Source/Application/jucer_DocumentEditorComponent.cpp" \
+	"../../Source/Application/jucer_DownloadCompileEngineThread.cpp" \
 	"../../Source/Application/jucer_GlobalPreferences.cpp" \
 	"../../Source/Application/jucer_Main.cpp" \
 	"../../Source/Application/jucer_MainWindow.cpp" \
@@ -131,6 +132,7 @@ HEADERS = \
 	"../../Source/Application/jucer_CommandLine.h" \
 	"../../Source/Application/jucer_CommonHeaders.h" \
 	"../../Source/Application/jucer_DocumentEditorComponent.h" \
+	"../../Source/Application/jucer_DownloadCompileEngineThread.h" \
 	"../../Source/Application/jucer_EulaDialogue.h" \
 	"../../Source/Application/jucer_FilePreviewComponent.h" \
 	"../../Source/Application/jucer_GlobalPreferences.h" \
@@ -402,9 +404,21 @@ HEADERS = \
 	"../../../../modules/juce_core/unit_tests/juce_UnitTest.h" \
 	"../../../../modules/juce_core/xml/juce_XmlDocument.h" \
 	"../../../../modules/juce_core/xml/juce_XmlElement.h" \
+	"../../../../modules/juce_core/zip/zlib/crc32.h" \
+	"../../../../modules/juce_core/zip/zlib/deflate.h" \
+	"../../../../modules/juce_core/zip/zlib/inffast.h" \
+	"../../../../modules/juce_core/zip/zlib/inffixed.h" \
+	"../../../../modules/juce_core/zip/zlib/inflate.h" \
+	"../../../../modules/juce_core/zip/zlib/inftrees.h" \
+	"../../../../modules/juce_core/zip/zlib/trees.h" \
+	"../../../../modules/juce_core/zip/zlib/zconf.h" \
+	"../../../../modules/juce_core/zip/zlib/zconf.in.h" \
+	"../../../../modules/juce_core/zip/zlib/zlib.h" \
+	"../../../../modules/juce_core/zip/zlib/zutil.h" \
 	"../../../../modules/juce_core/zip/juce_GZIPCompressorOutputStream.h" \
 	"../../../../modules/juce_core/zip/juce_GZIPDecompressorInputStream.h" \
 	"../../../../modules/juce_core/zip/juce_ZipFile.h" \
+	"../../../../modules/juce_core/juce_core.h" \
 	"../../../../modules/juce_core/juce_core.h" \
 	"../../../../modules/juce_cryptography/encryption/juce_BlowFish.h" \
 	"../../../../modules/juce_cryptography/encryption/juce_Primes.h" \
@@ -413,13 +427,16 @@ HEADERS = \
 	"../../../../modules/juce_cryptography/hashing/juce_SHA256.h" \
 	"../../../../modules/juce_cryptography/hashing/juce_Whirlpool.h" \
 	"../../../../modules/juce_cryptography/juce_cryptography.h" \
+	"../../../../modules/juce_cryptography/juce_cryptography.h" \
 	"../../../../modules/juce_data_structures/app_properties/juce_ApplicationProperties.h" \
 	"../../../../modules/juce_data_structures/app_properties/juce_PropertiesFile.h" \
 	"../../../../modules/juce_data_structures/undomanager/juce_UndoableAction.h" \
 	"../../../../modules/juce_data_structures/undomanager/juce_UndoManager.h" \
+	"../../../../modules/juce_data_structures/values/juce_CachedValue.h" \
 	"../../../../modules/juce_data_structures/values/juce_Value.h" \
 	"../../../../modules/juce_data_structures/values/juce_ValueTree.h" \
 	"../../../../modules/juce_data_structures/values/juce_ValueTreeSynchroniser.h" \
+	"../../../../modules/juce_data_structures/juce_data_structures.h" \
 	"../../../../modules/juce_data_structures/juce_data_structures.h" \
 	"../../../../modules/juce_events/broadcasters/juce_ActionBroadcaster.h" \
 	"../../../../modules/juce_events/broadcasters/juce_ActionListener.h" \
@@ -443,6 +460,7 @@ HEADERS = \
 	"../../../../modules/juce_events/native/juce_win32_HiddenMessageWindow.h" \
 	"../../../../modules/juce_events/timers/juce_MultiTimer.h" \
 	"../../../../modules/juce_events/timers/juce_Timer.h" \
+	"../../../../modules/juce_events/juce_events.h" \
 	"../../../../modules/juce_events/juce_events.h" \
 	"../../../../modules/juce_graphics/colour/juce_Colour.h" \
 	"../../../../modules/juce_graphics/colour/juce_ColourGradient.h" \
@@ -472,6 +490,24 @@ HEADERS = \
 	"../../../../modules/juce_graphics/geometry/juce_Point.h" \
 	"../../../../modules/juce_graphics/geometry/juce_Rectangle.h" \
 	"../../../../modules/juce_graphics/geometry/juce_RectangleList.h" \
+	"../../../../modules/juce_graphics/image_formats/jpglib/cderror.h" \
+	"../../../../modules/juce_graphics/image_formats/jpglib/jchuff.h" \
+	"../../../../modules/juce_graphics/image_formats/jpglib/jconfig.h" \
+	"../../../../modules/juce_graphics/image_formats/jpglib/jdct.h" \
+	"../../../../modules/juce_graphics/image_formats/jpglib/jdhuff.h" \
+	"../../../../modules/juce_graphics/image_formats/jpglib/jerror.h" \
+	"../../../../modules/juce_graphics/image_formats/jpglib/jinclude.h" \
+	"../../../../modules/juce_graphics/image_formats/jpglib/jmemsys.h" \
+	"../../../../modules/juce_graphics/image_formats/jpglib/jmorecfg.h" \
+	"../../../../modules/juce_graphics/image_formats/jpglib/jpegint.h" \
+	"../../../../modules/juce_graphics/image_formats/jpglib/jpeglib.h" \
+	"../../../../modules/juce_graphics/image_formats/jpglib/jversion.h" \
+	"../../../../modules/juce_graphics/image_formats/jpglib/transupp.h" \
+	"../../../../modules/juce_graphics/image_formats/pnglib/png.h" \
+	"../../../../modules/juce_graphics/image_formats/pnglib/pngconf.h" \
+	"../../../../modules/juce_graphics/image_formats/pnglib/pnginfo.h" \
+	"../../../../modules/juce_graphics/image_formats/pnglib/pngpriv.h" \
+	"../../../../modules/juce_graphics/image_formats/pnglib/pngstruct.h" \
 	"../../../../modules/juce_graphics/images/juce_Image.h" \
 	"../../../../modules/juce_graphics/images/juce_ImageCache.h" \
 	"../../../../modules/juce_graphics/images/juce_ImageConvolutionKernel.h" \
@@ -481,6 +517,7 @@ HEADERS = \
 	"../../../../modules/juce_graphics/native/juce_RenderingHelpers.h" \
 	"../../../../modules/juce_graphics/placement/juce_Justification.h" \
 	"../../../../modules/juce_graphics/placement/juce_RectanglePlacement.h" \
+	"../../../../modules/juce_graphics/juce_graphics.h" \
 	"../../../../modules/juce_graphics/juce_graphics.h" \
 	"../../../../modules/juce_gui_basics/application/juce_Application.h" \
 	"../../../../modules/juce_gui_basics/buttons/juce_ArrowButton.h" \
@@ -536,6 +573,8 @@ HEADERS = \
 	"../../../../modules/juce_gui_basics/layout/juce_ComponentBuilder.h" \
 	"../../../../modules/juce_gui_basics/layout/juce_ComponentMovementWatcher.h" \
 	"../../../../modules/juce_gui_basics/layout/juce_ConcertinaPanel.h" \
+	"../../../../modules/juce_gui_basics/layout/juce_FlexBox.h" \
+	"../../../../modules/juce_gui_basics/layout/juce_FlexItem.h" \
 	"../../../../modules/juce_gui_basics/layout/juce_GroupComponent.h" \
 	"../../../../modules/juce_gui_basics/layout/juce_MultiDocumentPanel.h" \
 	"../../../../modules/juce_gui_basics/layout/juce_ResizableBorderComponent.h" \
@@ -610,6 +649,7 @@ HEADERS = \
 	"../../../../modules/juce_gui_basics/windows/juce_TooltipWindow.h" \
 	"../../../../modules/juce_gui_basics/windows/juce_TopLevelWindow.h" \
 	"../../../../modules/juce_gui_basics/juce_gui_basics.h" \
+	"../../../../modules/juce_gui_basics/juce_gui_basics.h" \
 	"../../../../modules/juce_gui_extra/code_editor/juce_CodeDocument.h" \
 	"../../../../modules/juce_gui_extra/code_editor/juce_CodeEditorComponent.h" \
 	"../../../../modules/juce_gui_extra/code_editor/juce_CodeTokeniser.h" \
@@ -633,6 +673,7 @@ HEADERS = \
 	"../../../../modules/juce_gui_extra/misc/juce_SystemTrayIconComponent.h" \
 	"../../../../modules/juce_gui_extra/misc/juce_WebBrowserComponent.h" \
 	"../../../../modules/juce_gui_extra/native/juce_mac_CarbonViewWrapperComponent.h" \
+	"../../../../modules/juce_gui_extra/juce_gui_extra.h" \
 	"../../../../modules/juce_gui_extra/juce_gui_extra.h" \
 	"../../JuceLibraryCode/AppConfig.h" \
 	"../../JuceLibraryCode/BinaryData.h" \
