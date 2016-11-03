@@ -1,18 +1,18 @@
 # JUCE with QtCreator exporter
 
-This fork of JUCE includes an additional exporter to create QtCreator projects. No further changes were made. New JUCE releases will be regularly merged to keep the sources up to date.
+This fork of JUCE includes an additional Projucer exporter to create QtCreator projects. No further changes were made. New JUCE releases will be regularly merged to keep the sources up to date.
 
 Instructions:
 
-* Get the sources from this repository and compile the IntroJucer as usual.
-* Open a JUCE project with the patched Introjucer and add a new exporter for QtCreator. Save the project.
+* Get the sources from this repository and compile the Projucer as usual.
+* Open a JUCE project with the patched Projucer and add a new exporter for QtCreator. Save the project.
 * Open the created project file `Builds/QtCreator/YOURPROJECT.pro` in the QtCreator.
 * Choose a compiler if you are asked so and let QMake configure the project.
 * Open the project settings and disable the `Shadow-Build` feature for debug and release mode.
 
 Known problems:
 
-* Windows has a maximum length of 260 characters for relative paths. JUCE projects make heavy use of relative paths and these may become too long and compilation will fail.  A simple solution is to set copy-mode for all modules to `copy locally` in the Introjucer. 
+* Windows has a maximum length of 260 characters for relative paths. JUCE projects make heavy use of relative paths and these may become too long and compilation will fail.  A simple solution is to set copy-mode for all modules to `copy locally` in the Projucer. 
 
   Additionally, you can try to map long base paths to an own drive letter. From a command line run
 
