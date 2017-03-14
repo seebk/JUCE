@@ -139,9 +139,9 @@ public:
     }
 
     //==============================================================================
-    void addPlatformSpecificSettingsForProjectType (const ProjectType&) override
+    void addPlatformSpecificSettingsForProjectType (const ProjectType& type) override
     {
-        // no-op.
+        createDynamicLibrary = type.isAudioPlugin() || type.isDynamicLibrary();
     }
 
 private:
@@ -242,6 +242,25 @@ private:
             }
         }
 
+        if (config.exporter.isLinux())
+        {
+            if (createDynamicLibrary)
+                flags.add ("-fPIC");
+
+            if (linuxPackages.size() > 0)
+            {
+                auto pkgconfigFlags = String ("`pkg-config --cflags");
+                for (auto p : linuxPackages)
+                    pkgconfigFlags << " " << p;
+
+                pkgconfigFlags << "`";
+                flags.add (pkgconfigFlags);
+            }
+
+            if (linuxLibs.contains("pthread"))
+                flags.add ("-pthread");
+        }
+
         return getCleanedStringArray (flags);
     }
 
@@ -255,6 +274,19 @@ private:
         flags.addTokens (replacePreprocessorTokens (config, getExtraLinkerFlagsString()).trim(),
                          " \n", "\"'");
 
+        if (config.exporter.isLinux() && linuxPackages.size() > 0)
+        {
+            if (createDynamicLibrary)
+                flags.add ("-shared");
+
+            auto pkgconfigLibs = String ("`pkg-config --libs");
+            for (auto p : linuxPackages)
+                pkgconfigLibs << " " << p;
+
+            pkgconfigLibs << "`";
+            flags.add (pkgconfigLibs);
+        }
+
         return getCleanedStringArray (flags);
     }
 
@@ -263,9 +295,7 @@ private:
         StringArray paths;
 
         paths.add (".");
-        paths.add (RelativePath (project.getGeneratedCodeFolder(),
-                                 getTargetFolder(), RelativePath::buildTargetFolder).toWindowsStyle());
-
+        paths.addArray (extraSearchPaths);
         paths.addArray (config.getHeaderSearchPaths());
 
         if (! (isCodeBlocks() && isWindows()))
@@ -444,6 +474,7 @@ private:
     }
 
     CodeBlocksOS os;
+    bool createDynamicLibrary = false;
 
     JUCE_DECLARE_NON_COPYABLE (CodeBlocksProjectExporter)
 };
