@@ -189,6 +189,18 @@ public:
     };
 
     //==============================================================================
+    /** This abstract base class is implemented by LookAndFeel classes to provide
+        label drawing functionality.
+    */
+    struct JUCE_API  LookAndFeelMethods
+    {
+        virtual ~LookAndFeelMethods() {}
+
+        virtual void drawTabbedComponentBackground (Graphics& g, TabbedComponent& tc, Colour& colour, Rectangle<int> content, BorderSize<int> outline) = 0;
+        virtual void drawTabbedComponentOutline (Graphics& g, TabbedComponent& tc, int thickness, Rectangle<int> content, BorderSize<int> outline) = 0;
+    };
+
+    //==============================================================================
     /** @internal */
     void paint (Graphics&) override;
     /** @internal */

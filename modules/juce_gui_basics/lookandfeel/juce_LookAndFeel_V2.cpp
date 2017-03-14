@@ -2026,6 +2026,37 @@ void LookAndFeel_V2::drawGroupComponentOutline (Graphics& g, int width, int heig
 }
 
 //==============================================================================
+void LookAndFeel_V2::drawTabbedComponentBackground (Graphics& g, TabbedComponent& tc, Colour& colour, Rectangle<int> content, BorderSize<int> outline)
+{
+    //g.fillAll (colour);
+    g.setColour(colour);
+
+
+
+    Rectangle<float> contentf (content.getX(),content.getY(), content.getWidth(), content.getHeight());
+    g.fillRoundedRectangle(contentf, 10);
+}
+
+
+void LookAndFeel_V2::drawTabbedComponentOutline (Graphics& g, TabbedComponent& tc, int thickness, Rectangle<int> content, BorderSize<int> outline)
+{
+    /*RectangleList<int> rl (content);
+    rl.subtract (outline.subtractedFrom (content));
+
+    g.reduceClipRegion (rl);
+    g.fillAll (tc.findColour (TabbedComponent::outlineColourId));
+*/
+
+    //content.reduce(thickness/2, 0);
+    //content.translate(0, -thickness/2);
+
+    Path p;
+    p.addRoundedRectangle(content, 10);
+    g.setColour(tc.findColour (TabbedComponent::outlineColourId));
+    g.strokePath( p, PathStrokeType(thickness) );
+}
+
+//==============================================================================
 int LookAndFeel_V2::getTabButtonOverlap (int tabDepth)
 {
     return 1 + tabDepth / 3;

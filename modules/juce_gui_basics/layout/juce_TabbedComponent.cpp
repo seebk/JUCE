@@ -242,19 +242,16 @@ void TabbedComponent::paint (Graphics& g)
     g.fillAll (findColour (backgroundColourId));
 
     Rectangle<int> content (getLocalBounds());
-    BorderSize<int> outline (outlineThickness);
+    BorderSize<int> outline (outlineThickness / 2);
     TabbedComponentHelpers::getTabArea (content, outline, getOrientation(), tabDepth);
-
     g.reduceClipRegion (content);
-    g.fillAll (tabs->getTabBackgroundColour (getCurrentTabIndex()));
+
+    Colour c(tabs->getTabBackgroundColour (getCurrentTabIndex()));
+    getLookAndFeel().drawTabbedComponentBackground(g, *this, c, outline.subtractedFrom (content), outline);
 
     if (outlineThickness > 0)
     {
-        RectangleList<int> rl (content);
-        rl.subtract (outline.subtractedFrom (content));
-
-        g.reduceClipRegion (rl);
-        g.fillAll (findColour (outlineColourId));
+        getLookAndFeel().drawTabbedComponentOutline(g, *this, outlineThickness, outline.subtractedFrom (content), outline);
     }
 }
 

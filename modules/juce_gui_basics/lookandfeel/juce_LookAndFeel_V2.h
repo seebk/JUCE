@@ -262,6 +262,10 @@ public:
                                     const Justification&, GroupComponent&) override;
 
     //==============================================================================
+    void drawTabbedComponentBackground (Graphics& g, TabbedComponent& tc, Colour& colour, Rectangle<int> content, BorderSize<int> outline) override;
+    void drawTabbedComponentOutline (Graphics& g, TabbedComponent& tc, int thickness, Rectangle<int> content, BorderSize<int> outline) override;
+
+    //==============================================================================
     int getTabButtonSpaceAroundImage() override;
     int getTabButtonOverlap (int tabDepth) override;
     int getTabButtonBestWidth (TabBarButton&, int tabDepth) override;

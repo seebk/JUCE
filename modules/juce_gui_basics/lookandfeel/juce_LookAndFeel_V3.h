@@ -57,6 +57,9 @@ public:
     void drawPopupMenuBackground (Graphics&, int width, int height) override;
     void drawMenuBarBackground (Graphics&, int width, int height, bool, MenuBarComponent&) override;
 
+    void drawTabbedComponentBackground (Graphics& g, TabbedComponent& tc, Colour& colour, Rectangle<int> content, BorderSize<int> outline) override;
+    void drawTabbedComponentOutline (Graphics& g, TabbedComponent& tc, int thickness, Rectangle<int> content, BorderSize<int> outline) override;
+
     int getTabButtonOverlap (int tabDepth) override;
     int getTabButtonSpaceAroundImage() override;
     void drawTabButton (TabBarButton&, Graphics&, bool isMouseOver, bool isMouseDown) override;

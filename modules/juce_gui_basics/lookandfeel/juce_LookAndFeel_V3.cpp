@@ -164,6 +164,34 @@ void LookAndFeel_V3::drawTableHeaderBackground (Graphics& g, TableHeaderComponen
         g.fillRect (header.getColumnPosition (i).removeFromRight (1));
 }
 
+
+void LookAndFeel_V3::drawTabbedComponentBackground (Graphics& g, TabbedComponent& tc, Colour& colour, Rectangle<int> content, BorderSize<int> outline)
+{
+    //g.fillAll (colour);
+    g.setColour(colour);
+
+    Rectangle<float> contentf (content.getX(),content.getY(), content.getWidth(), content.getHeight());
+    g.fillRect(contentf);
+}
+
+void LookAndFeel_V3::drawTabbedComponentOutline (Graphics& g, TabbedComponent& tc, int thickness, Rectangle<int> content, BorderSize<int> outline)
+{
+    /*RectangleList<int> rl (content);
+    rl.subtract (outline.subtractedFrom (content));
+
+    g.reduceClipRegion (rl);
+    g.fillAll (tc.findColour (TabbedComponent::outlineColourId));
+*/
+
+    //content.reduce(thickness/2, 0);
+    //content.translate(0, -thickness/2);
+
+    Path p;
+    p.addRectangle(content);
+    g.setColour(tc.findColour (TabbedComponent::outlineColourId));
+    g.strokePath(p, PathStrokeType(thickness));
+}
+
 int LookAndFeel_V3::getTabButtonOverlap (int /*tabDepth*/)            { return -1; }
 int LookAndFeel_V3::getTabButtonSpaceAroundImage()                    { return 0; }
 
