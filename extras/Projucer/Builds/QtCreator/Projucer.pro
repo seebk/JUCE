@@ -31,8 +31,8 @@ CONFIG(debug, debug|release){
         "DEBUG=1" \ 
         "_DEBUG=1" \ 
         "JUCER_QT_CREATOR_D5F46ABF=1" \ 
-        "JUCE_APP_VERSION=4.3.0" \ 
-        "JUCE_APP_VERSION_HEX=0x40300" \ 
+        "JUCE_APP_VERSION=4.3.1" \ 
+        "JUCE_APP_VERSION_HEX=0x40301" \ 
 
 }
 
@@ -45,8 +45,8 @@ CONFIG(release, debug|release){
     DEFINES += \ 
         "NDEBUG=1" \ 
         "JUCER_QT_CREATOR_D5F46ABF=1" \ 
-        "JUCE_APP_VERSION=4.3.0" \ 
-        "JUCE_APP_VERSION_HEX=0x40300" \ 
+        "JUCE_APP_VERSION=4.3.1" \ 
+        "JUCE_APP_VERSION_HEX=0x40301" \ 
 
 }
 
@@ -354,6 +354,7 @@ HEADERS = \
 	"../../../../modules/juce_core/network/juce_NamedPipe.h" \
 	"../../../../modules/juce_core/network/juce_Socket.h" \
 	"../../../../modules/juce_core/network/juce_URL.h" \
+	"../../../../modules/juce_core/network/juce_WebInputStream.h" \
 	"../../../../modules/juce_core/streams/juce_BufferedInputStream.h" \
 	"../../../../modules/juce_core/streams/juce_FileInputSource.h" \
 	"../../../../modules/juce_core/streams/juce_InputSource.h" \
