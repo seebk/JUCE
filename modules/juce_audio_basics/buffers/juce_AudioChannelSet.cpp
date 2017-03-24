@@ -295,6 +295,7 @@ AudioChannelSet AudioChannelSet::create7point0()      { return AudioChannelSet (
 AudioChannelSet AudioChannelSet::create7point0SDDS()  { return AudioChannelSet ((1u << left) | (1u << right) | (1u << centre) | (1u << leftSurround) | (1u << rightSurround) | (1u << leftCentre) | (1u << rightCentre)); }
 AudioChannelSet AudioChannelSet::create7point1()      { return AudioChannelSet ((1u << left) | (1u << right) | (1u << centre) | (1u << leftSurroundSide) | (1u << rightSurroundSide) | (1u << leftSurroundRear) | (1u << rightSurroundRear) | (1u << LFE)); }
 AudioChannelSet AudioChannelSet::create7point1SDDS()  { return AudioChannelSet ((1u << left) | (1u << right) | (1u << centre) | (1u << leftSurround) | (1u << rightSurround) | (1u << leftCentre) | (1u << rightCentre) | (1u << LFE)); }
+AudioChannelSet AudioChannelSet::create9point1()      { return AudioChannelSet ((1u << left) | (1u << right) | (1u << centre) | (1u << leftSurround) | (1u << rightSurround) | (1u << LFE) | (1u << topFrontLeft) | (1u << topFrontRight) | (1u << topRearLeft) | (1u << topRearRight)); }
 AudioChannelSet AudioChannelSet::ambisonic()          { return AudioChannelSet ((1u << ambisonicW) | (1u << ambisonicX) | (1u << ambisonicY) | (1u << ambisonicZ)); }
 AudioChannelSet AudioChannelSet::quadraphonic()       { return AudioChannelSet ((1u << left) | (1u << right) | (1u << leftSurround) | (1u << rightSurround)); }
 AudioChannelSet AudioChannelSet::pentagonal()         { return AudioChannelSet ((1u << left) | (1u << right) | (1u << centre) | (1u << leftSurroundRear) | (1u << rightSurroundRear)); }
@@ -319,6 +320,7 @@ AudioChannelSet AudioChannelSet::canonicalChannelSet (int numChannels)
     if (numChannels == 6) return AudioChannelSet::create5point1();
     if (numChannels == 7) return AudioChannelSet::create7point0();
     if (numChannels == 8) return AudioChannelSet::create7point1();
+	if (numChannels == 10) return AudioChannelSet::create9point1();
 
     return discreteChannels (numChannels);
 }
@@ -333,6 +335,7 @@ AudioChannelSet AudioChannelSet::namedChannelSet (int numChannels)
     if (numChannels == 6) return AudioChannelSet::create5point1();
     if (numChannels == 7) return AudioChannelSet::create7point0();
     if (numChannels == 8) return AudioChannelSet::create7point1();
+	if (numChannels == 10) return AudioChannelSet::create9point1();
 
     return AudioChannelSet();
 }
@@ -389,6 +392,10 @@ Array<AudioChannelSet> AudioChannelSet::channelSetsWithNumberOfChannels (int num
             retval.add (AudioChannelSet::create7point1SDDS());
             retval.add (AudioChannelSet::octagonal());
         }
+		else if (numChannels == 10)
+		{
+			retval.add(AudioChannelSet::create9point1());
+		}
     }
 
     return retval;

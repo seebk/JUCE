@@ -203,6 +203,7 @@ public:
     */
     static AudioChannelSet create7point1SDDS();
 
+	static AudioChannelSet create9point1();
 
     //==============================================================================
     /** Creates a set for ambisonic surround setups (ambisonicW, ambisonicX, ambisonicY, ambisonicZ).
