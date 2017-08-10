@@ -838,7 +838,9 @@ EXCLUDE                = ../modules/juce_graphics/image_formats \
                          ../modules/juce_tracktion_marketplace/juce_tracktion_marketplace.h \
                          ../modules/juce_video/juce_video.h \
                          ../modules/juce_video/juce_video.cpp \
-                         ../modules/juce_video/native
+                         ../modules/juce_video/native \
+                         ../modules/juce_dsp/juce_dsp.h \
+                         ../modules/juce_dsp/juce_dsp.cpp
 
 # The EXCLUDE_SYMLINKS tag can be used to select whether or not files or
 # directories that are symbolic links (a Unix file system feature) are excluded
@@ -2055,12 +2057,9 @@ PREDEFINED             = WIN32=1 \
                          JUCE_LINUX=1 \
                          DOXYGEN=1 \
                          JUCE_COMPILER_SUPPORTS_NOEXCEPT=1 \
-                         JUCE_COMPILER_SUPPORTS_NULLPTR=1 \
-                         JUCE_COMPILER_SUPPORTS_MOVE_SEMANTICS=1 \
                          JUCE_COMPILER_SUPPORTS_INITIALIZER_LISTS=1 \
                          JUCE_COMPILER_SUPPORTS_VARIADIC_TEMPLATES=1 \
                          JUCE_COMPILER_SUPPORTS_OVERRIDE_AND_FINAL=1 \
-                         JUCE_COMPILER_SUPPORTS_LAMBDAS=1 \
                          JUCE_MODAL_LOOPS_PERMITTED=1
 
 # If the MACRO_EXPANSION and EXPAND_ONLY_PREDEF tags are set to YES then this
