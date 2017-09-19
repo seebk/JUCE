@@ -24,7 +24,8 @@
   ==============================================================================
 */
 
-#pragma once
+namespace juce
+{
 
 //==============================================================================
 /**
@@ -95,3 +96,5 @@ private:
     Image backgroundTexture;
     Colour backgroundTextureBaseColour;
 };
+
+} // namespace juce
