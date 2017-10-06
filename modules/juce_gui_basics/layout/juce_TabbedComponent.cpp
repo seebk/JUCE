@@ -302,6 +302,7 @@ void TabbedComponent::changeCallback (const int newCurrentTabIndex, const String
 			panelComponent->sendLookAndFeelChange();
             panelComponent->setVisible (true);
             panelComponent->toFront (true);
+			panelComponent->resized();
         }
 
         repaint();
