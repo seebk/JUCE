@@ -193,6 +193,7 @@ public:
     /** This abstract base class is implemented by LookAndFeel classes to provide
         label drawing functionality.
     */
+	#define TABBEDCOMPONENT_LOOKANDFEEL_SUPPORT 1
     struct JUCE_API  LookAndFeelMethods
     {
         virtual ~LookAndFeelMethods() {}
