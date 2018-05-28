@@ -1,3 +1,7 @@
+
+__NOTE__: Changes in the Projucer exporter code from JUCE 4 to JUCE 5 made it quite difficult to adapt my patches. Unfortunately, I will not have enough time to update the QtCreator exporter patches.
+
+
 # JUCE with QtCreator exporter
 
 This fork of JUCE includes an additional Projucer exporter to create QtCreator projects. No further changes were made. New JUCE releases will be regularly merged to keep the sources up to date.
